@@ -2,7 +2,7 @@ package com.example.demo.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
+import java.lang.Long;
 @Entity
 @Data
 @Table(name = "users")
