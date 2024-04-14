@@ -1,7 +1,8 @@
 package com.example.demo.services;
 
-
+import com.example.demo.entities.UrlClass;
 import com.example.demo.entities.UserClass;
+import com.example.demo.repository.UrlRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,21 +11,21 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
-    private final UserRepository repository;
-    public List<UserClass> listAll() {
+public class UrlService {
+    private final UrlRepository repository;
+    public List<UrlClass> listAll() {
         return repository.findAll();
     }
-    public UserClass add(UserClass user) {
-        return repository.save(user);
+    public UrlClass add(UrlClass url) {
+        return repository.save(url);
     }
-    public void update(UserClass user){
-        repository.save(user);
+    public void update(UrlClass url){
+        repository.save(url);
     }
     public void deleteByID(Long id){
         repository.deleteById(id);
     }
-    public UserClass getById(Long id){
+    public UrlClass getById(Long id){
         return repository.findById(id).orElse(null);
     }
 }
