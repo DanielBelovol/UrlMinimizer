@@ -1,11 +1,11 @@
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     isAdmin BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-CREATE TABLE links (
+CREATE TABLE IF NOT EXISTS links (
     link_id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     original_url TEXT NOT NULL,
