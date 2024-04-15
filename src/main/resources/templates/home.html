@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User's URLs</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .user-info {
+            font-size: 10px;
+            padding: 6px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: auto;
+            max-width: 400px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <!-- Информация о пользователе без рамки и малым шрифтом -->
+    <div class="user-info">
+        <p th:if="${user != null}" th:text="'Welcome, ' + ${user.username}" ></p>
+        <p th:if="${user != null}" th:text="'Your email is ' + ${user.email}" ></p>
+    </div>
+
+    <!-- Форма для добавления URL -->
+    <h1 class="mb-4">User's URLs</h1>
+    <form th:action="@{/user/url/create}" method="post" class="mb-4">
+        <div class="form-group">
+            <label for="theUrl">URL:</label>
+            <input type="text" id="theUrl" name="theUrl" class="form-control">
+        </div>
+        <input type="hidden" name="userId" th:value="${user.id}">
+        <button type="submit" class="btn btn-sm btn-primary">Add URL</button>
+    </form>
+
+    <!-- Таблица с URL пользователя -->
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>URL</th>
+            <th>Short URL</th>
+            <th>Calls</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="url : ${urls}">
+            <td th:text="${url.id}"></td>
+            <td th:text="${url.url}"></td>
+            <td>
+                <a th:href="@{'/' + ${url.shortUrl}}" th:text="${url.shortUrl}" target="_blank"></a>
+            </td>
+            <td th:text="${url.countOfCalls}"></td>
+            <td>
+                <form th:action="@{'/user/url/delete/' + ${url.id}}" method="post" class="d-inline-block">
+                    <input type="hidden" name="_method" value="post" />
+                    <input type="hidden" name="userId" th:value="${user.id}">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
