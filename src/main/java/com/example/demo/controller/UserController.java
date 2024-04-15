@@ -1,7 +1,9 @@
 package com.example.demo.controller;
+
 import com.example.demo.entities.UserClass;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +13,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
-
+    public static final String USER_NOT_FOUND_WITH_ID = "User not found with id: ";
     @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @GetMapping
     public ResponseEntity<List<UserClass>> getAllUsers() {
@@ -25,7 +28,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserClass> getUserById(@PathVariable Long id) {
         UserClass user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_WITH_ID + id));
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -38,7 +41,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UserClass> updateUser(@PathVariable Long id, @RequestBody UserClass user) {
         if (!userRepository.existsById(id)) {
-            throw new ResourceNotFoundException("User not found with id: " + id);
+            throw new ResourceNotFoundException(USER_NOT_FOUND_WITH_ID + id);
         }
         user.setUserId(id);
         UserClass updatedUser = userRepository.save(user);
@@ -48,7 +51,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         if (!userRepository.existsById(id)) {
-            throw new ResourceNotFoundException("User not found with id: " + id);
+            throw new ResourceNotFoundException(USER_NOT_FOUND_WITH_ID + id);
         }
         userRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
