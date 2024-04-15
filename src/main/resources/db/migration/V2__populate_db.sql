@@ -1,13 +1,13 @@
-INSERT INTO users (username, password, email, created_date)
-VALUES ('admin', '$2a$10$.IeRI/Gy/8UscmtMmMHyDe2PDe0TMLn.9vb6WUSS2FVtzGmEZzcj2', 'admin@gmail.com',  NOW()),
-       ('auth user', '$2a$10$uZ/R0BFKt2MqlybEAcO2NebJkdp5qWI3G2SnssNn3HcMHEZAC61Nu', 'auth_user@gmail.com',  NOW()),
-       ('user', '$2a$10$AcO2NebJkdp5qWI3dp50TMLn.9vbHcMHEZRI/Gy/8Uscmtgfds54', 'user@gmail.com',  NOW());
+--USERS
+INSERT INTO users (username, email, isAdmin) VALUES
+('Alice', 'alice@example.com', FALSE),
+('Bob', 'bob@example.com', FALSE),
+('Charlie', 'charlie@example.com', TRUE),
+('Diana', 'diana@example.com', FALSE);
 
-INSERT INTO roles (name) VALUES ('ADMIN'), ('USER');
-
-
-INSERT INTO user_roles (user_id, role_id) VALUES
-   ((SELECT id FROM users WHERE username = 'admin'), (SELECT id FROM roles WHERE name = 'ADMIN')),
-   ((SELECT id FROM users WHERE username = 'user'), (SELECT id FROM roles WHERE name = 'USER'));
-
-
+--URL
+INSERT INTO links (user_id, original_url, short_url) VALUES
+(1, 'https://www.verylongwebsiteurl.com/articles/interesting-article', 'https://short.ly/abc123'),
+(1, 'https://www.anotherlongurl.com/about-us', 'https://short.ly/def456'),
+(2, 'https://www.somesite.com/product/item12345', 'https://short.ly/ghi789'),
+(3, 'https://www.example.com/promo', 'https://short.ly/jkl012');
