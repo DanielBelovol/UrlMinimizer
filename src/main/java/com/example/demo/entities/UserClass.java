@@ -1,24 +1,30 @@
 package com.example.demo.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import java.lang.Long;
+import lombok.Getter;
+import lombok.Setter;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "users")
 public class UserClass {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long userId;
 
-    @Column(name = "username", nullable = false)
-    private String username;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "user_id")
+  private Long userId;
 
-    @Column(name = "email", unique = true, nullable = false)
-    private String email;
+  @Column(name = "username", nullable = false)
+  private String username;
 
-    @Column(name = "is_admin", nullable = false)
-    private boolean isAdmin;
+  @Email
+  @NotEmpty
+  @Column(name = "email", unique = true, nullable = false)
+  private String email;
 
+  @Column(name = "is_admin", nullable = false)
+  private boolean isAdmin;
 }
