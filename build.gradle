@@ -23,7 +23,7 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'commons-codec:commons-codec:1.16.1'
+	implementation 'commons-codec:commons-codec:1.15'
 }
 
 tasks.named('test') {
