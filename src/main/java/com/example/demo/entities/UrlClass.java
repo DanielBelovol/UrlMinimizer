@@ -1,5 +1,7 @@
 package com.example.demo.entities;
+
 import java.lang.Long;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
