@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.entities.UrlClass;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.UrlRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/urls")
 public class UrlController {
-
     private final UrlRepository urlRepository;
 
     @Autowired

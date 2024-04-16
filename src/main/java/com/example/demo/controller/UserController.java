@@ -28,7 +28,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserClass> getUserById(@PathVariable Long id) {
         UserClass user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id, "id", String.valueOf(id)));
+                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_WITH_ID + id, "id", String.valueOf(id)));
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -41,7 +41,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UserClass> updateUser(@PathVariable Long id, @RequestBody UserClass user) {
         if (!userRepository.existsById(id)) {
-            throw new ResourceNotFoundException("User not found with id: " + id, "id", String.valueOf(id));
+            throw new ResourceNotFoundException(USER_NOT_FOUND_WITH_ID + id, "id", String.valueOf(id));
         }
         user.setUserId(id);
         UserClass updatedUser = userRepository.save(user);
@@ -51,7 +51,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         if (!userRepository.existsById(id)) {
-            throw new ResourceNotFoundException("User not found with id: " + id, "id", String.valueOf(id));
+            throw new ResourceNotFoundException(USER_NOT_FOUND_WITH_ID + id, "id", String.valueOf(id));
         }
         userRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
