@@ -1,5 +1,5 @@
 --USERS
-INSERT INTO users (username, email, isAdmin) VALUES
+INSERT INTO users (username, email, is_Admin) VALUES
 ('Alice', 'alice@example.com', FALSE),
 ('Bob', 'bob@example.com', FALSE),
 ('Charlie', 'charlie@example.com', TRUE),
