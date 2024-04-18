@@ -1,55 +1,58 @@
 package com.example.demo.controller;
 
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import com.example.demo.entities.UrlClass;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.UrlRepository;
 import com.example.demo.services.UrlShortenerService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/urls")
 @RequiredArgsConstructor
 public class UrlController {
-    @Autowired
-    private final UrlRepository urlRepository;
-    @Autowired
-    private final UrlShortenerService urlService;
 
-    @GetMapping
-    public List<UrlClass> getAllUrls() {
-        return urlRepository.findAll();
-    }
+  private static final Logger log = LoggerFactory.getLogger(UrlController.class);
+  private final UrlRepository urlRepository;
+  private final UrlShortenerService urlService;
 
-    @GetMapping("/{id}")
-    public UrlClass getUrlById(@PathVariable Long id) {
-        return urlRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("UrlClass", "id", String.valueOf(id)));
-    }
+  @GetMapping
+  public List<UrlClass> getAllUrls() {
+    log.info("Fetching all URLs");
+    return urlRepository.findAll();
+  }
 
-    @PostMapping
-    public UrlClass createUrl(@RequestBody UrlClass urlClass) {
-        String shortUrl = urlService.shortenerUrl(urlClass.getOriginalUrl());
-        urlClass.setShortUrl(shortUrl);
-        return urlRepository.save(urlClass);
-    }
+  @GetMapping("/{id}")
+  public UrlClass getUrlById(@PathVariable Long id) {
+    log.info("Fetching URL by id: {}", id);
+    return urlRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("URL not found with id: " + id));
+  }
 
-    @PutMapping("/{id}")
-    public UrlClass updateUrl(@PathVariable Long id, @RequestBody UrlClass urlDetails) {
-        UrlClass urlClass = urlRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("UrlClass", "id", String.valueOf(id)));
-        urlClass.setOriginalUrl(urlDetails.getOriginalUrl());
-        urlClass.setShortUrl(urlDetails.getShortUrl());
-        // обновите другие поля при необходимости
+  @PostMapping
+  public UrlClass createUrl(@RequestBody UrlClass urlClass) {
+    log.info("Creating new URL for original URL: {}", urlClass.getOriginalUrl());
+    String shortUrl = urlService.shortenerUrl(urlClass.getOriginalUrl());
+    urlClass.setShortUrl(shortUrl);
+    return urlRepository.save(urlClass);
+  }
 
-        return urlRepository.save(urlClass);
-    }
+  @PutMapping("/{id}")
+  public UrlClass updateUrl(@PathVariable Long id, @RequestBody UrlClass urlDetails) {
+    log.info("Updating URL with id: {}", id);
+    UrlClass urlClass = urlRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("URL not found with id: " + id));
+    urlClass.setOriginalUrl(urlDetails.getOriginalUrl());
+    urlClass.setShortUrl(urlDetails.getShortUrl());
+    return urlRepository.save(urlClass);
+  }
 
-    @DeleteMapping("/{id}")
-    public void deleteUrl(@PathVariable Long id) {
-        urlRepository.deleteById(id);
-    }
+  @DeleteMapping("/{id}")
+  public void deleteUrl(@PathVariable Long id) {
+    log.info("Deleting URL with id: {}", id);
+    urlRepository.deleteById(id);
+  }
 }
