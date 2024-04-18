@@ -2,6 +2,7 @@ package com.example.demo.entities;
 
 import java.lang.Long;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,7 +17,7 @@ public class UrlClass {
     @Column(name = "link_id")
     private Long linkId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private UserClass user;
 
