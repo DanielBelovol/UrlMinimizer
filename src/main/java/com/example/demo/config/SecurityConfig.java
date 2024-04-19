@@ -1,6 +1,6 @@
 package com.example.demo.config;
 
-import com.example.demo.security.CustomUserDetailsService;
+import com.example.demo.security.JwtRequestFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 @Configuration
@@ -19,15 +20,16 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 public class SecurityConfig {
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain filterChain(HttpSecurity http, JwtRequestFilter jwtRequestFilter) throws Exception { // Добавлен параметр JwtRequestFilter
     http
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**").permitAll()
+            .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**", "/register", "/api/v1/users/**").permitAll()
             .requestMatchers("/api/auth/**", "/login").permitAll()
             .requestMatchers("/api/v1/urls/**").permitAll()
-            .anyRequest().permitAll()
+            .anyRequest().authenticated()
         )
+        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
         .formLogin(formLogin -> formLogin
             .loginPage("/login")
             .loginProcessingUrl("/perform_login")
@@ -44,7 +46,6 @@ public class SecurityConfig {
         .exceptionHandling(exceptions -> exceptions
             .accessDeniedPage("/access-denied")
         );
-
     return http.build();
   }
 
