@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import com.example.demo.security.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -7,7 +8,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -23,21 +23,28 @@ public class SecurityConfig {
     http
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/admin/**").hasRole("ADMIN")
-            .requestMatchers("/user/**").hasRole("USER")
-            .anyRequest().authenticated()
+            .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**").permitAll()
+            .requestMatchers("/api/auth/**", "/login").permitAll()
+            .requestMatchers("/api/v1/urls/**").permitAll()
+            .anyRequest().permitAll()
         )
         .formLogin(formLogin -> formLogin
             .loginPage("/login")
+            .loginProcessingUrl("/perform_login")
+            .defaultSuccessUrl("/", true)
+            .failureUrl("/login?error=true")
             .permitAll()
         )
         .logout(logout -> logout
-            .logoutSuccessHandler(logoutSuccessHandler())
+            .logoutUrl("/perform_logout")
+            .deleteCookies("JSESSIONID")
+            .logoutSuccessUrl("/login?logout=true")
             .permitAll()
         )
         .exceptionHandling(exceptions -> exceptions
-            .accessDeniedHandler(accessDeniedHandler())
+            .accessDeniedPage("/access-denied")
         );
+
     return http.build();
   }
 
@@ -47,14 +54,13 @@ public class SecurityConfig {
   }
 
   @Bean
-  public AuthenticationManager authManager(HttpSecurity http, PasswordEncoder passwordEncoder, AuthenticationManagerBuilder auth, UserDetailsService userDetailsService) throws Exception {
-    auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-    return http.getSharedObject(AuthenticationManagerBuilder.class).build();
+  public LogoutSuccessHandler logoutSuccessHandler() {
+    return (request, response, authentication) -> response.sendRedirect("/login?logout");
   }
 
   @Bean
-  public LogoutSuccessHandler logoutSuccessHandler() {
-    return (request, response, authentication) -> response.sendRedirect("/login?logout");
+  public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+    return http.getSharedObject(AuthenticationManagerBuilder.class).build();
   }
 
   @Bean

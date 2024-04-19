@@ -1,8 +1,8 @@
 --USERS
 INSERT INTO users (username, email, password, is_admin)
-VALUES ('Alice', 'alice@example.com', 'encrypted_password_here', FALSE),
-       ('Bob', 'bob@example.com', 'encrypted_password_here', FALSE),
-       ('Charlie', 'charlie@example.com', 'encrypted_password_here', TRUE);
+VALUES ('Alice', 'alice@example.com', '$2a$10$EMLJmusHhdxHBLY4pk./a.mvCJkyH3oCBvS3hVjZsYLNQtlfkAE1O', FALSE),
+       ('Bob', 'bob@example.com', '$2a$10$EMLJmusHhdxHBLY4pk./a.mvCJkyH3oCBvS3hVjZsYLNQtlfkAE1O', FALSE),
+       ('Charlie', 'charlie@example.com', '$2a$10$EMLJmusHhdxHBLY4pk./a.mvCJkyH3oCBvS3hVjZsYLNQtlfkAE1O', TRUE);
 
 -- URLS
 INSERT INTO links (user_id, original_url, short_url)

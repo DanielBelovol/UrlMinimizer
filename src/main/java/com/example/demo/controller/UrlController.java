@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/urls")
+@RequestMapping("/api/v1/urls")
 @RequiredArgsConstructor
 public class UrlController {
 
@@ -29,7 +29,10 @@ public class UrlController {
   public UrlClass getUrlById(@PathVariable Long id) {
     log.info("Fetching URL by id: {}", id);
     return urlRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("URL not found with id: " + id));
+        .orElseThrow(() -> {
+          log.error("URL not found with id: {}", id);
+          return new ResourceNotFoundException("URL not found with id: " + id);
+        });
   }
 
   @PostMapping
@@ -37,22 +40,36 @@ public class UrlController {
     log.info("Creating new URL for original URL: {}", urlClass.getOriginalUrl());
     String shortUrl = urlService.shortenerUrl(urlClass.getOriginalUrl());
     urlClass.setShortUrl(shortUrl);
-    return urlRepository.save(urlClass);
+    UrlClass savedUrl = urlRepository.save(urlClass);
+    log.info("Created URL with short version: {}", savedUrl.getShortUrl());
+    return savedUrl;
   }
 
   @PutMapping("/{id}")
   public UrlClass updateUrl(@PathVariable Long id, @RequestBody UrlClass urlDetails) {
     log.info("Updating URL with id: {}", id);
-    UrlClass urlClass = urlRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("URL not found with id: " + id));
-    urlClass.setOriginalUrl(urlDetails.getOriginalUrl());
-    urlClass.setShortUrl(urlDetails.getShortUrl());
-    return urlRepository.save(urlClass);
+    return urlRepository.findById(id)
+        .map(existingUrl -> {
+          existingUrl.setOriginalUrl(urlDetails.getOriginalUrl());
+          existingUrl.setShortUrl(urlService.shortenerUrl(urlDetails.getOriginalUrl()));
+          log.info("Updated URL with id: {}", id);
+          return urlRepository.save(existingUrl);
+        })
+        .orElseThrow(() -> {
+          log.error("URL not found with id: {}", id);
+          return new ResourceNotFoundException("URL not found with id: " + id);
+        });
   }
 
   @DeleteMapping("/{id}")
   public void deleteUrl(@PathVariable Long id) {
     log.info("Deleting URL with id: {}", id);
+    urlRepository.findById(id)
+        .orElseThrow(() -> {
+          log.error("URL not found with id: {}", id);
+          return new ResourceNotFoundException("URL not found with id: " + id);
+        });
     urlRepository.deleteById(id);
+    log.info("Deleted URL with id: {}", id);
   }
 }
