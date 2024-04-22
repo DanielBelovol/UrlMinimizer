@@ -27,4 +27,13 @@ public class LoginController {
     return "login";
   }
 
+  @GetMapping("/reg")
+  public String reg(Model model) {
+    return "reg";
+  }
+
+  @GetMapping("/acount")
+  public String acount(Model model) {
+    return "acount";
+  }
 }

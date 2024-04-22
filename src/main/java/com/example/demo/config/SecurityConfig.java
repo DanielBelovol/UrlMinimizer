@@ -27,7 +27,7 @@ public class SecurityConfig {
             .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**", "/register", "/api/v1/users/**").permitAll()
             .requestMatchers("/api/auth/**", "/login").permitAll()
             .requestMatchers("/api/v1/urls/**").permitAll()
-            .anyRequest().authenticated()
+            .anyRequest().permitAll()
         )
         .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
         .formLogin(formLogin -> formLogin
