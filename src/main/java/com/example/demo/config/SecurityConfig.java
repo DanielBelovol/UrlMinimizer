@@ -20,14 +20,16 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 public class SecurityConfig {
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http, JwtRequestFilter jwtRequestFilter) throws Exception { // Добавлен параметр JwtRequestFilter
+  public SecurityFilterChain filterChain(HttpSecurity http, JwtRequestFilter jwtRequestFilter) throws Exception {
     http
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**", "/register", "/api/v1/users/**").permitAll()
-            .requestMatchers("/api/auth/**", "/login").permitAll()
-            .requestMatchers("/api/v1/urls/**").permitAll()
-            .anyRequest().permitAll()
+            .requestMatchers("/static/**",
+                "/css/**", "/js/**", "/images/**",
+                "/register", "/api/v1/users/**", "/reg", "/login").permitAll()
+            .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers("/api/v1/urls/**").authenticated()
+            .anyRequest().authenticated()
         )
         .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
         .formLogin(formLogin -> formLogin
