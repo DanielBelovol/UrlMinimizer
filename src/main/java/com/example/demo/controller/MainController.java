@@ -10,28 +10,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class MainController {
 
-    @Autowired
-    private UserRepository usersRepository;
+  @Autowired
+  private UserRepository usersRepository;
 
-
-    @GetMapping
-    public String index(Model model) {
-        Iterable<UserClass> users = usersRepository.findAll();
-        model.addAttribute("users", users);
-        return "index";
-    }
-    @GetMapping("/login")
-    public String login(Model model) {
-
-        return "login";
-    }
-    @GetMapping("/reg")
-    public String reg(Model model) {
-        return "reg";
-    }
-    @GetMapping("/acount")
-    public String acount(Model model) {
-        return "acount";
-    }
+  @GetMapping
+  public String index(Model model) {
+    Iterable<UserClass> users = usersRepository.findAll();
+    model.addAttribute("users", users);
+    return "index";
+  }
 
 }
