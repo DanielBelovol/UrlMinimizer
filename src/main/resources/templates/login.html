@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,19 +8,23 @@
   <link rel="stylesheet" th:href="@{/styles/login.css}">
   <title>Minimalizes</title>
 </head>
+
 <body>
 <header>
   <div class="logo">
-    <a href="index.html" th:href="@{/}"><img class="logoImg" th:src="@{/images/icons8-ионный.svg}" width="50" height="50" ></a>
+    <a th:href="@{/}"><img class="logoImg" th:src="@{/images/icons8-ионный.svg}" width="50" height="50"></a>
   </div>
 </header>
 <main>
   <h1>Вхід</h1>
   <form th:action="@{/perform_login}" method="post">
-    Емайл: <input type="text" name="username" required><br><br> <!-- Обратите внимание, что здесь должно быть name="username" -->
+<!--    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>-->
+    Емайл: <input type="email" name="username" required><br><br> <!-- username використовується тут для узгодження з очікуваннями Spring Security -->
     Пароль: <input type="password" name="password" required><br><br>
     <button class="button" type="submit">Вхід</button>
   </form>
+  <p>Не маєте акаунту? <a th:href="@{/reg}">Зареєструйтесь тут</a></p>
 </main>
+
 </body>
 </html>

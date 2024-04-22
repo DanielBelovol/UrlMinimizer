@@ -30,6 +30,8 @@ dependencies {
   runtimeOnly 'io.jsonwebtoken:jjwt-orgjson:0.11.5'
   implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
   implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+  implementation 'org.springframework.boot:spring-boot-starter-validation'
+  implementation 'jakarta.validation:jakarta.validation-api:3.0.1'
 
 }
 

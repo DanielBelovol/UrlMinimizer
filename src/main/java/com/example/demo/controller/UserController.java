@@ -42,7 +42,7 @@ public class UserController {
     log.info("Creating a new user with username: {}", user.getUsername());
     if (user.getPassword().length() < 8 || !user.getPassword().matches(".*\\d.*")) {
       log.error("Password validation failed for user: {}", user.getUsername());
-      return ResponseEntity.badRequest().body(null);  // You should create a proper error response body
+      return ResponseEntity.badRequest().body(null);
     }
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     UserClass createdUser = userRepository.save(user);

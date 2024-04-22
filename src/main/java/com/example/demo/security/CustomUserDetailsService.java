@@ -20,11 +20,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
   @Override
   @Transactional
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    UserClass user = userRepository.findByUsername(username)
-        .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    UserClass user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
-    return User.withUsername(user.getUsername())
+    return User.withUsername(user.getEmail())
         .password(user.getPassword())
         .authorities(user.getIsAdmin() ? "ADMIN" : "USER")
         .accountExpired(false)
