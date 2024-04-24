@@ -28,7 +28,8 @@ public class SecurityConfig {
                 "/css/**", "/js/**", "/images/**",
                 "/register", "/api/v1/users/**", "/reg", "/login").permitAll()
             .requestMatchers("/api/auth/**").permitAll()
-            .requestMatchers("/api/v1/urls/**").authenticated()
+            .requestMatchers("/api/v1/urls/**").permitAll()
+            .requestMatchers("/{shortUrl}").permitAll()
             .anyRequest().authenticated()
         )
         .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
