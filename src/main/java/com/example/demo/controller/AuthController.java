@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.security.JwtRequest;
-import com.example.demo.security.JwtResponse;
-import com.example.demo.security.JwtTokenUtil;
+import com.example.demo.dto.JwtRequest;
+import com.example.demo.dto.JwtResponse;
+import com.example.demo.util.JwtTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +10,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -41,5 +40,11 @@ public class AuthController {
     String token = jwtTokenUtil.generateToken(userDetails.getUsername());
     logger.info("Authentication successful for user: {}", userDetails.getUsername());
     return ResponseEntity.ok(new JwtResponse(token));
+  }
+
+
+  @GetMapping("/test")
+  public String getName(Principal principal){
+      return principal.getName();
   }
 }

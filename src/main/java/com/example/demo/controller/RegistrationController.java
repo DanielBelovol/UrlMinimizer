@@ -37,4 +37,6 @@ public class RegistrationController {
     userRepository.save(user);
     return new ModelAndView("redirect:/login");
   }
+
+
 }

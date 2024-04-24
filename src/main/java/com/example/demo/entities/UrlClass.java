@@ -1,6 +1,8 @@
 package com.example.demo.entities;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.Data;
 
@@ -24,6 +26,14 @@ public class UrlClass {
   @Column(name = "short_url", nullable = false)
   private String shortUrl;
 
+  @Column(name = "calls")
+  private Integer countOfCalls;
+
   @Column(name = "creation_date")
   private LocalDateTime creationDate;
+
+  public UrlClass() {
+    this.countOfCalls = 0;
+    this.creationDate = LocalDateTime.now();
+  }
 }

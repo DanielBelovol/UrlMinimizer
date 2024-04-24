@@ -1,4 +1,4 @@
-package com.example.demo.security;
+package com.example.demo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,5 +1,6 @@
 package com.example.demo.security;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.example.demo.entities.UserClass;
 import com.example.demo.repository.UserRepository;
@@ -12,25 +13,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
   private final UserRepository userRepository;
 
-  public CustomUserDetailsService(UserRepository userRepository) {
-    this.userRepository = userRepository;
-  }
-
   @Override
   @Transactional
   public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-    log.info("Спроба аутентифікації користувача: {}", usernameOrEmail);
+    log.info("Trying to authenticate user : {}", usernameOrEmail);
     UserClass user = userRepository.findByUsernameOrEmail(usernameOrEmail)
         .orElseThrow(() -> {
-          log.error("Користувача не знайдено: {}", usernameOrEmail);
-          return new UsernameNotFoundException("Користувача не знайдено: " + usernameOrEmail);
+          log.error("User not found : {}", usernameOrEmail);
+          return new UsernameNotFoundException("User not found: " + usernameOrEmail);
         });
 
-    log.info("Користувача знайдено: {}", user.getUsername());
+    log.info("User found : {}", user.getUsername());
+    log.info("Email of user : {}", user.getEmail());
     return User.withUsername(user.getUsername())
         .password(user.getPassword())
         .authorities(user.getIsAdmin() ? "ADMIN" : "USER")

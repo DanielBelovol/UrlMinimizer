@@ -9,13 +9,11 @@ import org.springframework.stereotype.Service;
 public class UrlShortenerService {
 
   private static final Logger log = LoggerFactory.getLogger(UrlShortenerService.class);
-  private static final String StartOfUrl = "http://localhost:8080/";
 
   public String shortenerUrl(String originalUrl) {
     try {
       String sha256 = DigestUtils.sha256Hex(originalUrl);
-      String code = sha256.substring(0, 8);
-      String shortUrl = StartOfUrl + code;
+      String shortUrl = sha256.substring(0, 8);
       log.info("Shortened URL from {} to {}", originalUrl, shortUrl);
       return shortUrl;
     } catch (Exception e) {

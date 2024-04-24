@@ -1,5 +1,6 @@
-package com.example.demo.security;
+package com.example.demo.util;
 
+import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,10 +16,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtTokenUtil {
 
-  private SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+  private final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
   @Value("${jwt.expiration}")
-  private long jwtExpirationInMs;
+  private Duration jwtExpirationInM;
 
   public String generateToken(String username) {
     Map<String, Object> claims = new HashMap<>();
@@ -31,7 +32,7 @@ public class JwtTokenUtil {
         .setClaims(claims)
         .setIssuer("ExampleIssuer")
         .setIssuedAt(new Date(System.currentTimeMillis()))
-        .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInMs))
+        .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInM.toMillis()))
         .signWith(secretKey)
         .compact();
   }
