@@ -30,6 +30,7 @@ public class SecurityConfig {
             .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers("/api/v1/urls/**").permitAll()
             .requestMatchers("/{shortUrl}").permitAll()
+            .requestMatchers("/", "/{shortUrl}").permitAll()
             .anyRequest().authenticated()
         )
         .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)

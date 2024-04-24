@@ -85,21 +85,6 @@ public class UrlController {
     log.info("Deleted URL with id: {}", id);
   }
 
-  @GetMapping("/{shortUrl}")
-  public ResponseEntity<Void> redirectToOriginalUrl(@PathVariable String shortUrl, HttpServletResponse response) {
-    log.info("Searching for short URL: {}", shortUrl);
-    String fullShortUrl = "http://localhost:8080/" + shortUrl;
-    UrlClass url = urlRepository.findByShortUrl(fullShortUrl)
-        .orElseThrow(() -> new ResourceNotFoundException("Short URL not found: " + shortUrl));
-    try {
-      response.sendRedirect(url.getOriginalUrl());
-      log.info("Redirect attempt for short URL: {}", shortUrl);
-      return ResponseEntity.status(HttpStatus.FOUND).build();
-    } catch (IOException e) {
-      log.error("Failed to redirect short URL: {}", shortUrl, e);
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    }
-  }
 
 
 }
