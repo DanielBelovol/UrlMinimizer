@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
-
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import com.example.demo.entities.UrlClass;
 import com.example.demo.entities.UserClass;
@@ -36,7 +36,7 @@ public class UrlController {
     return urlRepository.findAll();
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("/id/{id}")
   public UrlClass getUrlById(@PathVariable Long id) {
     log.info("Fetching URL by id: {}", id);
     return urlRepository.findById(id)
@@ -49,7 +49,7 @@ public class UrlController {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User must be authenticated");
     }
     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-    UserClass userEntity = userRepository.findByEmail(userDetails.getUsername())
+    UserClass userEntity = userRepository.findByUsernameOrEmail(userDetails.getUsername())
         .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + userDetails.getUsername()));
 
     urlClass.setUser(userEntity);
@@ -84,4 +84,22 @@ public class UrlController {
     urlRepository.deleteById(id);
     log.info("Deleted URL with id: {}", id);
   }
+
+  @GetMapping("/{shortUrl}")
+  public ResponseEntity<Void> redirectToOriginalUrl(@PathVariable String shortUrl, HttpServletResponse response) {
+    log.info("Searching for short URL: {}", shortUrl);
+    String fullShortUrl = "http://localhost:8080/" + shortUrl;
+    UrlClass url = urlRepository.findByShortUrl(fullShortUrl)
+        .orElseThrow(() -> new ResourceNotFoundException("Short URL not found: " + shortUrl));
+    try {
+      response.sendRedirect(url.getOriginalUrl());
+      log.info("Redirect attempt for short URL: {}", shortUrl);
+      return ResponseEntity.status(HttpStatus.FOUND).build();
+    } catch (IOException e) {
+      log.error("Failed to redirect short URL: {}", shortUrl, e);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+
+
 }

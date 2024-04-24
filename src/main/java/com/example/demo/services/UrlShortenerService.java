@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class UrlShortenerService {
 
   private static final Logger log = LoggerFactory.getLogger(UrlShortenerService.class);
-  private static final String StartOfUrl = "https://minimizer/";
+  private static final String StartOfUrl = "http://localhost:8080/";
 
   public String shortenerUrl(String originalUrl) {
     try {

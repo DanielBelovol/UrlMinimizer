@@ -19,7 +19,7 @@
   <h1>Вхід</h1>
   <form th:action="@{/perform_login}" method="post">
 <!--    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>-->
-    Емайл: <input type="email" name="username" required><br><br> <!-- username використовується тут для узгодження з очікуваннями Spring Security -->
+    Емайл: <input type="text" name="username" required><br><br> <!-- username використовується тут для узгодження з очікуваннями Spring Security -->
     Пароль: <input type="password" name="password" required><br><br>
     <button class="button" type="submit">Вхід</button>
   </form>
