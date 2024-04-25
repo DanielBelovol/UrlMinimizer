@@ -6,8 +6,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import com.example.demo.entities.UrlClass;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.UrlRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
